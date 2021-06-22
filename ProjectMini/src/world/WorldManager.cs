@@ -30,6 +30,22 @@ namespace ProjectMini.src.world
             base.OnDispose();
         }
 
+        public void Tick()
+        {
+            for (int i = 0; i < v_worldList.Count; i++)
+            {
+                v_worldList[i].Tick();
+            }
+        }
+
+        public void Draw()
+        {
+            for (int i = 0; i < v_worldList.Count; i++)
+            {
+                v_worldList[i].Draw();
+            }
+        }
+
         public static World CreateWorld(World world)
         {
             if (!instance.v_worldList.Contains(world))

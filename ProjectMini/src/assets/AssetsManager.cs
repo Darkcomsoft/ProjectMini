@@ -13,6 +13,8 @@ namespace ProjectMini.src.assets
 
         private Dictionary<string, Texture2D> v_textureList;
 
+        public static Texture2D v_spritesAtlas01;
+
         public AssetsManager()
         {
             instance = this;
@@ -35,6 +37,9 @@ namespace ProjectMini.src.assets
         public void LoadContent()
         {
             LoadTexture("SpriteTeste");
+            LoadTexture("tiles");
+
+            v_spritesAtlas01 = GetTexture("tiles");
         }
         #region LoadFunctions
         private void LoadTexture(string name)

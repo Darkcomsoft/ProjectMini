@@ -4,7 +4,9 @@ using Microsoft.Xna.Framework.Input;
 using ProjectMini.src.assets;
 using ProjectMini.src.debug;
 using ProjectMini.src.engine;
+using ProjectMini.src.entitys;
 using ProjectMini.src.game;
+using System;
 using System.Threading;
 
 namespace ProjectMini
@@ -17,6 +19,11 @@ namespace ProjectMini
         private SpriteBatch _spriteBatch;
 
         private GameApp v_game;
+
+        public float DeltaTime;
+        public float time;
+
+        private BasicEffect v_spriteShader;
 
         public Application()
         {
@@ -37,6 +44,15 @@ namespace ProjectMini
 
         protected override void Initialize()
         {
+            v_spriteShader = new BasicEffect(GraphicsDevice);
+            v_spriteShader.TextureEnabled = true;
+            v_spriteShader.FogEnabled = false;
+            v_spriteShader.LightingEnabled = false;
+            v_spriteShader.VertexColorEnabled = true;
+            v_spriteShader.World = Matrix.Identity;
+            v_spriteShader.Projection = Matrix.Identity;
+            v_spriteShader.View = Matrix.Identity;
+
             v_game = new GameApp();
             base.Initialize();
         }
@@ -47,37 +63,28 @@ namespace ProjectMini
             
             v_game?.Load();
 
-            textureTeste = AssetsManager.GetTexture("SpriteTeste");
+            textureTeste = AssetsManager.GetTexture("tiles");
         }
-
-        Vector2 playerpos = Vector2.Zero;
 
         protected override void Update(GameTime gameTime)
         {
+            DeltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            time = (float)gameTime.TotalGameTime.TotalSeconds;
+
+            if (backbufferHeight != GraphicsDevice.PresentationParameters.BackBufferHeight || backbufferWidth != GraphicsDevice.PresentationParameters.BackBufferWidth)
+            {
+                ScalePresentationArea();
+            }
+
             Input.TickStart();
             AppInput();
-
-            if (Input.GetKey(Keys.W))
-            {
-                playerpos.Y += 2f;
-            }
-
-            if (Input.GetKey(Keys.S))
-            {
-                playerpos.Y -= 2f;
-            }
-
-            if (Input.GetKey(Keys.D))
-            {
-                playerpos.X -= 2f;
-            }
-
-            if (Input.GetKey(Keys.A))
-            {
-                playerpos.X += 2f;
-            }
-
             v_game?.Tick(gameTime);
+
+            if (Camera.main != null)
+            {
+                instance.v_spriteShader.Projection = Camera.main.v_projection;
+                instance.v_spriteShader.View = Camera.main.v_view;
+            }
 
             Input.TickEnd();
             base.Update(gameTime);
@@ -87,19 +94,14 @@ namespace ProjectMini
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-
-            _spriteBatch.Begin(SpriteSortMode.Deferred,BlendState.AlphaBlend,SamplerState.PointClamp);
-
-            for (int x = 0; x < 10; x++)
-            {
-                for (int y = 0; y < 10; y++)
-                {
-                    _spriteBatch.Draw(textureTeste, new Vector2((x * 80) + playerpos.X, (y * 80) + playerpos.Y), new Rectangle(0, 0, 16, 16), Color.White, 0, Vector2.Zero, new Vector2(5, 5), SpriteEffects.None, 0);
-                }
-            }
-
             v_game.Draw(gameTime);
-            _spriteBatch.End();
+
+            _spriteBatch.Begin();
+            //
+            v_game.DrawGUI();//this call ImGUI draw elements
+            //
+            _spriteBatch.End();//End with GameRender
+
             Thread.Sleep(1);
             base.Draw(gameTime);
         }
@@ -122,10 +124,40 @@ namespace ProjectMini
                 _graphics.ToggleFullScreen();
             }
         }
+        Vector2 baseScreenSize = new Vector2(640, 640);
+        int backbufferWidth, backbufferHeight;
+        Matrix globalTransformation;
+        public void ScalePresentationArea()
+        {
+            //Work out how much we need to scale our graphics to fill the screen
+            backbufferWidth = GraphicsDevice.PresentationParameters.BackBufferWidth;
+            backbufferHeight = GraphicsDevice.PresentationParameters.BackBufferHeight;
+            float horScaling = backbufferWidth / baseScreenSize.X;
+            float verScaling = backbufferHeight / baseScreenSize.Y;
+            Vector3 screenScalingFactor = new Vector3(horScaling, verScaling, 1);
+            globalTransformation = Matrix.CreateScale(screenScalingFactor);
+            System.Diagnostics.Debug.WriteLine("Screen Size - Width[" + GraphicsDevice.PresentationParameters.BackBufferWidth + "] Height [" + GraphicsDevice.PresentationParameters.BackBufferHeight + "]");
+        }
 
         public static void Draw(Texture2D texture, Vector2 position, Rectangle sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
         {
-            instance._spriteBatch.Draw(texture, position, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+            instance.v_spriteShader.World = Matrix.CreateTranslation(new Vector3(position, 0) - new Vector3(EntityPlayer.v_playerPosition, 0));
+            instance._spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, instance.v_spriteShader, null);
+            instance._spriteBatch.Draw(texture, Vector2.Zero, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+            instance._spriteBatch.End();//End with GameRender
         }
+
+        public static void DrawStatic(Texture2D texture, Vector2 position, Rectangle sourceRectangle, Color color, float rotation, Vector2 origin, Vector2 scale, SpriteEffects effects, float layerDepth)
+        {
+            instance.v_spriteShader.World = Matrix.CreateTranslation(new Vector3(position, 0));
+            instance._spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone, instance.v_spriteShader, null);
+            instance._spriteBatch.Draw(texture, Vector2.Zero, sourceRectangle, color, rotation, origin, scale, effects, layerDepth);
+            instance._spriteBatch.End();//End with GameRender
+        }
+    }
+
+    public static class MathUtils
+    {
+        public static int FloorToInt(double value) => (int)Math.Floor(value);
     }
 }

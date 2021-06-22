@@ -16,9 +16,10 @@ C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\bin\Debug\netcoreapp3.1\
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.csprojAssemblyReference.cache
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.AssemblyInfoInputs.cache
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.AssemblyInfo.cs
-C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.csproj.CoreCompileInputs.cache
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.csproj.CopyComplete
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.dll
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.pdb
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.genruntimeconfig.cache
 C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\bin\Debug\netcoreapp3.1\Content\SpriteTeste.xnb
+C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\bin\Debug\netcoreapp3.1\Content\tiles.xnb
+C:\Users\estev\Documents\GitHub\ProjectMini\ProjectMini\obj\Debug\netcoreapp3.1\ProjectMini.csproj.CoreCompileInputs.cache

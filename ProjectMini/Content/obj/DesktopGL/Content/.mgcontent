@@ -5,8 +5,10 @@
   <Config />
   <SourceFiles>
     <File>C:/Users/estev/Documents/GitHub/ProjectMini/ProjectMini/Content/SpriteTeste.png</File>
+    <File>C:/Users/estev/Documents/GitHub/ProjectMini/ProjectMini/Content/tiles.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>

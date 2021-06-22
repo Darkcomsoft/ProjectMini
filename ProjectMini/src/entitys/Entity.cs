@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using ProjectMini.src.engine;
 using ProjectSLN.darkcomsoft.src;
 using System;
 using System.Collections.Generic;
@@ -6,24 +7,12 @@ using System.Text;
 
 namespace ProjectMini.src.entitys
 {
-    public class Entity : ClassBase
+    public class Entity : GameObject
     {
-        private Vector2 v_position;
-
-        public Entity()
-        {
-            v_position = Vector2.Zero;
-            OnCreate();
-        }
-
         public void Start()
         {
+            v_activated = true;
             OnStart();
-        }
-
-        public void Tick()
-        {
-            OnTick();
         }
 
         protected override void OnDispose()
@@ -31,9 +20,7 @@ namespace ProjectMini.src.entitys
             base.OnDispose();
         }
 
-        protected virtual void OnTick() { }
         protected virtual void OnStart() { }
-        protected virtual void OnCreate() { }
 
         public static Entity SpawnEntity(Entity entity)
         {
